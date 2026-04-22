@@ -84,8 +84,8 @@
 
       const eventosHTML = ev ? ev.map(e => `
         <div class="cal-evento-chip">
-          ${e.description ? `<span class="cal-evento-hora">${escapar(e.description)}</span>` : ''}
           <span class="cal-evento-nome">${escapar(e.title)}</span>
+          ${e.description ? `<span class="cal-evento-hora">${escapar(e.description)}</span>` : ''}
         </div>
       `).join('') : '';
 
@@ -157,9 +157,16 @@
   // ------------------------------------------------------------
   // Comunicados
   // ------------------------------------------------------------
+  function ocultarComunicados(painel) {
+    painel.hidden = true;
+    painel.style.display = 'none';
+    painel.innerHTML = '';
+  }
+
   async function carregarComunicados() {
     const painel = document.querySelector('#comunicados-painel');
     if (!painel) return;
+    ocultarComunicados(painel);
     try {
       const { data, error } = await window.supabase
         .from('announcements')
@@ -167,17 +174,16 @@
         .eq('is_active', true)
         .order('published_at', { ascending: false });
       if (error) throw error;
-      if (!data || !data.length) {
-        painel.hidden = true;
-        return;
-      }
+      const ativos = (data || []).filter(c => (c.title && c.title.trim()) || (c.body && c.body.trim()));
+      if (!ativos.length) return;
       painel.hidden = false;
+      painel.style.display = '';
       painel.innerHTML = `
         <div class="comunicados-header">
           <span class="comunicados-kigo">Comunicados</span>
         </div>
         <div class="comunicados-lista">
-          ${data.map(c => `
+          ${ativos.map(c => `
             <article class="comunicado-item">
               <header class="comunicado-item-header">
                 <h3 class="comunicado-titulo">${escapar(c.title)}</h3>
@@ -190,7 +196,7 @@
       `;
     } catch (e) {
       console.warn('[landing] falha ao carregar comunicados:', e);
-      painel.hidden = true;
+      ocultarComunicados(painel);
     }
   }
 

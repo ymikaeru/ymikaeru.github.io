@@ -436,6 +436,10 @@ main.landing {
   overflow: hidden;
 }
 
+.comunicados-painel[hidden] {
+  display: none;
+}
+
 .comunicados-painel::before {
   content: '告';
   position: absolute;
