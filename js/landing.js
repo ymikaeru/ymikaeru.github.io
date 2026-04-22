@@ -32,6 +32,58 @@
     ];
   }
 
+  // ------------------------------------------------------------
+  // Skeleton e revelação de conteúdo
+  // ------------------------------------------------------------
+  function fileirasCalendario(n) {
+    return Array.from({ length: n }, () => `
+      <div class="skel-row">
+        <div class="skel"></div>
+        <div class="skel"></div>
+        <div class="skel"></div>
+      </div>`).join('');
+  }
+
+  function skeletonCalendario() {
+    const wrap = document.querySelector('#calendario');
+    if (!wrap) return;
+    wrap.innerHTML = `
+      <div class="skel-cal-head">
+        <div class="skel skel-cal-btn"></div>
+        <div class="skel skel-cal-mes"></div>
+        <div class="skel skel-cal-btn"></div>
+      </div>
+      <div class="skel-2col">
+        <div class="skel-col">${fileirasCalendario(15)}</div>
+        <div class="skel-col">${fileirasCalendario(16)}</div>
+      </div>`;
+  }
+
+  function skeletonPoema() {
+    const painel = document.querySelector('#poema-painel');
+    if (!painel) return;
+    painel.hidden = false;
+    painel.innerHTML = `
+      <div class="skel-poema">
+        <div class="skel"></div>
+        <div class="skel"></div>
+        <div class="skel"></div>
+        <div class="skel"></div>
+        <div class="skel"></div>
+      </div>`;
+  }
+
+  function revelarConteudo(el, html, aposInserir) {
+    el.style.transition = 'none';
+    el.style.opacity = '0';
+    el.innerHTML = html;
+    if (aposInserir) aposInserir();
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.style.transition = 'opacity .35s ease';
+      el.style.opacity = '1';
+    }));
+  }
+
   function renderPoema(poema) {
     const painel = document.querySelector('#poema-painel');
     if (!painel) return;
@@ -41,13 +93,13 @@
     }
     painel.hidden = false;
     const linhas = dividirPoemaEm2(poema.original);
-    painel.innerHTML = `
+    revelarConteudo(painel, `
       <div class="poema-vertical" aria-hidden="true">
         ${linhas.map(l => `<div class="poema-linha">${l}</div>`).join('')}
       </div>
       <p class="poema-romaji"><em>${poema.romaji || ''}</em></p>
       <p class="poema-traducao">${poema.translation || ''}</p>
-    `;
+    `);
   }
 
   // ------------------------------------------------------------
@@ -102,7 +154,7 @@
     const col1 = Array.from({ length: metade }, (_, i) => diaHTML(i + 1)).join('');
     const col2 = Array.from({ length: total - metade }, (_, i) => diaHTML(metade + i + 1)).join('');
 
-    wrap.innerHTML = `
+    revelarConteudo(wrap, `
       <header class="cal-header">
         <button class="cal-nav" data-dir="-1" aria-label="Mês anterior">‹</button>
         <div class="cal-mes-wrap">
@@ -115,15 +167,15 @@
         <div class="cal-col">${col1}</div>
         <div class="cal-col">${col2}</div>
       </div>
-    `;
-
-    wrap.querySelectorAll('.cal-nav').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const dir = Number(btn.dataset.dir);
-        estado.mes += dir;
-        if (estado.mes < 0) { estado.mes = 11; estado.ano -= 1; }
-        if (estado.mes > 11) { estado.mes = 0; estado.ano += 1; }
-        atualizar();
+    `, () => {
+      wrap.querySelectorAll('.cal-nav').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const dir = Number(btn.dataset.dir);
+          estado.mes += dir;
+          if (estado.mes < 0) { estado.mes = 11; estado.ano -= 1; }
+          if (estado.mes > 11) { estado.mes = 0; estado.ano += 1; }
+          atualizar();
+        });
       });
     });
   }
@@ -151,6 +203,78 @@
     } catch (e) {
       console.warn('[landing] falha ao carregar eventos:', e);
       return new Map();
+    }
+  }
+
+  // ------------------------------------------------------------
+  // Dados de acesso — difusões e casa de Johrei
+  // ------------------------------------------------------------
+  async function carregarDadosAcesso() {
+    const painel = document.querySelector('#acesso-painel');
+    if (!painel) return;
+    try {
+      const { data, error } = await window.supabase
+        .from('access_info')
+        .select('category, nome, endereco, telefone, dias, horario, sort_order')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      const registros = data || [];
+      if (!registros.length) return;
+
+      const difusoes = registros.filter(r => r.category === 'difusao');
+      const johrei   = registros.filter(r => r.category === 'johrei');
+
+      function cardHTML(r) {
+        const tel = r.telefone ? r.telefone.replace(/\D/g, '') : null;
+        return `
+          <div class="acesso-card">
+            ${r.nome ? `<div class="acesso-nome">${escapar(r.nome)}</div>` : ''}
+            ${r.endereco ? `
+              <div class="acesso-detalhe">
+                <span class="acesso-detalhe-label">Endereço</span>
+                <span class="acesso-detalhe-valor">${escapar(r.endereco)}</span>
+              </div>` : ''}
+            ${r.dias ? `
+              <div class="acesso-detalhe">
+                <span class="acesso-detalhe-label">Dias</span>
+                <span class="acesso-detalhe-valor">${escapar(r.dias)}</span>
+              </div>` : ''}
+            ${r.horario ? `
+              <div class="acesso-detalhe">
+                <span class="acesso-detalhe-label">Horário</span>
+                <span class="acesso-detalhe-valor">${escapar(r.horario)}</span>
+              </div>` : ''}
+            ${r.telefone ? `
+              <div class="acesso-detalhe">
+                <span class="acesso-detalhe-label">Telefone</span>
+                <a class="acesso-detalhe-valor" href="tel:+55${tel}">${escapar(r.telefone)}</a>
+              </div>` : ''}
+          </div>`;
+      }
+
+      function secaoHTML(titulo, itens) {
+        if (!itens.length) return '';
+        return `
+          <div class="acesso-secao">
+            <div class="acesso-categoria-titulo">${titulo}</div>
+            <div class="acesso-cards">${itens.map(cardHTML).join('')}</div>
+          </div>`;
+      }
+
+      const html = `
+        <div class="acesso-header">
+          <span class="acesso-kigo">Acesso</span>
+        </div>
+        <div class="acesso-secoes">
+          ${secaoHTML('Difusões', difusoes)}
+          ${secaoHTML('Casa de Johrei', johrei)}
+        </div>`;
+
+      painel.hidden = false;
+      revelarConteudo(painel, html);
+    } catch (e) {
+      console.warn('[landing] falha ao carregar dados de acesso:', e);
     }
   }
 
@@ -230,7 +354,10 @@
   }
 
   function inicializar() {
+    skeletonCalendario();
+    skeletonPoema();
     atualizar();
+    carregarDadosAcesso();
     carregarComunicados();
   }
 
