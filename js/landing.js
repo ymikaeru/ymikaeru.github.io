@@ -94,6 +94,9 @@
     painel.hidden = false;
     const linhas = dividirPoemaEm2(poema.original);
     revelarConteudo(painel, `
+      <div class="poema-header">
+        <div class="poema-titulo" style="font-weight:400; font-size:.92rem; font-style:normal; letter-spacing:.04em; color:var(--muted);">Poemas "Yama to Mizu" <span style="font-family:'Noto Serif JP',serif; font-size:.85rem; opacity:.7;">(山と水)</span></div>
+      </div>
       <div class="poema-vertical" aria-hidden="true">
         ${linhas.map(l => `<div class="poema-linha">${l}</div>`).join('')}
       </div>
@@ -222,6 +225,7 @@
       const registros = data || [];
       if (!registros.length) return;
 
+      const sede     = registros.filter(r => r.category === 'sede');
       const difusoes = registros.filter(r => r.category === 'difusao');
       const johrei   = registros.filter(r => r.category === 'johrei');
 
@@ -267,6 +271,7 @@
           <span class="acesso-kigo">Acesso</span>
         </div>
         <div class="acesso-secoes">
+          ${secaoHTML('Sede Central', sede)}
           ${secaoHTML('Difusões', difusoes)}
           ${secaoHTML('Casa de Johrei', johrei)}
         </div>`;
