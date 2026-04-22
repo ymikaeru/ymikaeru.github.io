@@ -663,10 +663,20 @@ a.acesso-detalhe-valor:hover { text-decoration: underline; }
     padding: 1.25rem 1rem;
   }
 
+  .acesso-layout {
+    grid-template-columns: 1fr;
+    gap: .75rem;
+  }
+
   .acesso-sede {
+    grid-column: auto;
     grid-template-columns: 1fr;
     width: 100%;
     gap: .75rem;
+  }
+
+  .acesso-outros {
+    grid-column: auto;
   }
 
   .acesso-grupo-cards {
@@ -675,7 +685,16 @@ a.acesso-detalhe-valor:hover { text-decoration: underline; }
   }
 
   .acesso-card {
-    padding: .9rem 1rem;
+    padding: .85rem 1rem;
+    gap: .4rem;
+  }
+
+  .acesso-detalhe-label {
+    font-size: .6rem;
+  }
+
+  .acesso-detalhe-valor {
+    font-size: .83rem;
   }
 }
 
