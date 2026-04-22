@@ -271,7 +271,7 @@
         .map(cardHTML).join('');
       const outrosGrupos = outrosCards ? `
           <div class="acesso-grupo">
-            <div class="acesso-grupo-titulo">Difusões e Núcleos de Johrei</div>
+            <div class="acesso-grupo-titulo">Regionais, Difusões e Núcleos do Johrei</div>
             <div class="acesso-grupo-cards">${outrosCards}</div>
           </div>` : '';
 
