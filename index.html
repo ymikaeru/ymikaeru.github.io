@@ -8,113 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap">
-  <style>
-    :root {
-      --bg: #f8f9f5;
-      --surface: #fff;
-      --text: #1c1c1e;
-      --muted: #6e6e73;
-      --accent: #b8860b;
-      --accent-soft: rgba(184,134,11,.08);
-      --green: #006400;
-      --red: #cc0000;
-      --border: #e5e5e0;
-      --radius: 16px;
-      --shadow: 0 4px 24px rgba(0,0,0,.06);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Outfit', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem 4rem;
-    }
-
-    /* Hero */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.25rem;
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-    .logo-wrap { width: 120px; height: 120px; filter: drop-shadow(0 4px 16px rgba(0,0,0,.12)); }
-    .org-name {
-      font-family: 'Crimson Pro', Georgia, serif;
-      font-size: clamp(1.5rem, 4vw, 2.2rem);
-      font-weight: 600;
-      letter-spacing: .01em;
-      color: var(--text);
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      background: var(--accent-soft);
-      border: 1px solid rgba(184,134,11,.25);
-      color: var(--accent);
-      font-size: .8rem;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: .35rem .9rem;
-      border-radius: 99px;
-    }
-    .badge-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: .4; transform: scale(.75); }
-    }
-
-    /* Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.25rem;
-      width: 100%;
-      max-width: 860px;
-    }
-
-    /* Card */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem 1.5rem;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      gap: .75rem;
-    }
-    .card-icon { font-size: 2rem; line-height: 1; }
-    .card-title { font-size: 1.1rem; font-weight: 600; }
-    .card-desc { font-size: .88rem; color: var(--muted); line-height: 1.5; }
-    /* Divider */
-    .divider {
-      width: 40px; height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      border-radius: 1px;
-    }
-
-    footer {
-      margin-top: 3.5rem;
-      font-size: .78rem;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.8;
-    }
-  </style>
+  <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
 
@@ -136,13 +30,26 @@
     </div>
 
     <h1 class="org-name">Comunidade Messiânica Universal</h1>
-    <div class="badge"><span class="badge-dot"></span>Site em Construção</div>
   </div>
 
+  <main class="landing">
+    <section class="poema-calendario" aria-label="Calendário e poesia do mês">
+      <div id="calendario" class="calendario" aria-live="polite"></div>
+      <aside id="poema-painel" class="poema-painel" aria-label="Poema de Yama to Mizu"></aside>
+    </section>
+
+    <section id="comunicados-painel" class="comunicados-painel" hidden aria-label="Comunicados"></section>
+  </main>
+
   <footer>
-    <div class="divider" style="margin: 0 auto 1rem;"></div>
+    <div class="divider"></div>
     Comunidade Messiânica Universal
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/yamatomizu-data.js"></script>
+  <script src="js/landing.js" defer></script>
 
 </body>
 </html>

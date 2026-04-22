@@ -1,0 +1,523 @@
+/* Landing CMU — estilos completos (base + seções).
+   Inclui variáveis, reset, hero, calendário, poema, comunicados.
+   Os estilos inline do <style> foram removidos e consolidados aqui. */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap');
+
+/* =====================================================
+   Tokens
+===================================================== */
+:root {
+  --bg: #f5f1e8;
+  --surface: #fffdf6;
+  --text: #1a1a18;
+  --muted: #6b6860;
+  --accent: #b8860b;
+  --accent-soft: rgba(184,134,11,.08);
+  --accent-mid: rgba(184,134,11,.18);
+  --green: #1a5c1a;
+  --red: #b82020;
+  --border: #e2ddd0;
+  --radius: 16px;
+  --shadow: 0 4px 28px rgba(0,0,0,.07);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,.1);
+}
+
+/* =====================================================
+   Reset
+===================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* =====================================================
+   Base
+===================================================== */
+body {
+  font-family: 'Outfit', -apple-system, sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 140% 60% at 50% 0%, rgba(184,134,11,.06) 0%, transparent 55%);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2.5rem 1rem 5rem;
+}
+
+/* =====================================================
+   Hero
+===================================================== */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.35rem;
+  text-align: center;
+  margin-bottom: 2.75rem;
+  padding-bottom: 2.25rem;
+  position: relative;
+}
+
+/* Thin gold rule below hero */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.logo-wrap {
+  width: 80px;
+  height: 80px;
+  filter:
+    drop-shadow(0 2px 8px rgba(0,0,0,.12))
+    drop-shadow(0 8px 24px rgba(184,134,11,.2));
+  transition: filter .3s ease;
+}
+.logo-wrap:hover {
+  filter:
+    drop-shadow(0 2px 8px rgba(0,0,0,.12))
+    drop-shadow(0 12px 32px rgba(184,134,11,.32));
+}
+
+.org-name {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: clamp(1.45rem, 4vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-mid);
+  color: var(--accent);
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .35rem 1rem;
+  border-radius: 99px;
+}
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .35; transform: scale(.7); }
+}
+
+/* =====================================================
+   Rodapé
+===================================================== */
+footer {
+  margin-top: 3.5rem;
+  font-size: .78rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.8;
+}
+.divider {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  border-radius: 1px;
+  margin: 0 auto 1rem;
+}
+
+/* =====================================================
+   Layout principal
+===================================================== */
+main.landing {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+
+/* =====================================================
+   Seção poema + calendário
+===================================================== */
+.poema-calendario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* =====================================================
+   Calendário
+===================================================== */
+.calendario {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding-bottom: .85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.cal-mes-wrap {
+  text-align: center;
+  line-height: 1;
+}
+.cal-ano {
+  font-family: 'Crimson Pro', serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: -.03em;
+}
+.cal-mes-nome {
+  font-family: 'Outfit', sans-serif;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  color: var(--accent);
+  margin-top: .4rem;
+  text-transform: uppercase;
+}
+
+.cal-nav {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 1.25rem;
+  line-height: 1;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background .15s, border-color .15s;
+}
+.cal-nav:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-mid);
+}
+
+/* 2 colunas verticais */
+.cal-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.cal-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-col + .cal-col {
+  border-left: 1px solid var(--border);
+  padding-left: .75rem;
+}
+
+/* Linha de dia */
+.cal-dia {
+  display: grid;
+  grid-template-columns: 2rem 1.4rem 1fr;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .2rem;
+  border-bottom: 1px dotted #e0dbd0;
+  min-height: 2rem;
+}
+.cal-col .cal-dia:last-child { border-bottom: none; }
+
+.cal-num {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  text-align: right;
+  line-height: 1;
+}
+
+.cal-kanji {
+  font-family: 'Noto Serif JP', serif;
+  font-size: .82rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1;
+}
+
+.cal-dia-eventos {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* Chips de evento */
+.cal-evento-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(26,92,26,.08);
+  border-left: 2px solid var(--green);
+  padding: 3px 5px;
+  border-radius: 3px;
+}
+.cal-evento-hora {
+  font-size: .72rem;
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1.3;
+}
+.cal-evento-nome {
+  font-size: .78rem;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cores por dia da semana */
+.cal-domingo .cal-num,
+.cal-domingo .cal-kanji { color: var(--red); }
+.cal-sabado .cal-num,
+.cal-sabado .cal-kanji  { color: #2255b8; }
+.cal-feriado .cal-num   { color: var(--red); }
+
+/* Hoje */
+.cal-dia.cal-hoje {
+  background: var(--accent-soft);
+  border-radius: 5px;
+  border-bottom-color: transparent;
+}
+.cal-dia.cal-hoje .cal-num {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =====================================================
+   Painel de poema — kakemono
+===================================================== */
+.poema-painel {
+  order: -1;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Marca d'água sutil no fundo */
+.poema-painel::before {
+  content: '詩';
+  position: absolute;
+  bottom: -1rem;
+  right: 1.25rem;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 9rem;
+  color: rgba(184,134,11,.06);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.poema-header {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+.poema-kigo {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.poema-titulo {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--text);
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.poema-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: #252018;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.poema-linha {
+  letter-spacing: .12em;
+}
+
+.poema-traducao {
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: #3a3530;
+  text-align: center;
+  padding: 0 .75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.poema-romaji {
+  font-size: .78rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.65;
+  position: relative;
+  z-index: 1;
+  letter-spacing: .02em;
+}
+
+.poema-vazio {
+  margin: auto;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* =====================================================
+   Painel de comunicados — mesma estética do poema
+===================================================== */
+.comunicados-painel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.comunicados-painel::before {
+  content: '告';
+  position: absolute;
+  bottom: -1rem;
+  right: 1.5rem;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 9rem;
+  color: rgba(184,134,11,.06);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.comunicados-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .9rem;
+}
+
+.comunicados-kigo {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.comunicados-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.comunicado-item {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.1rem;
+}
+.comunicado-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.comunicado-item-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .5rem;
+}
+
+.comunicado-titulo {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--text);
+}
+
+.comunicado-data {
+  font-size: .75rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  letter-spacing: .02em;
+}
+
+.comunicado-body p {
+  font-size: .95rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: .5rem;
+}
+.comunicado-body p:last-child { margin-bottom: 0; }
+
+/* =====================================================
+   Responsivo
+===================================================== */
+@media (max-width: 760px) {
+  body { padding: 1.75rem .75rem 4rem; }
+  .poema-calendario { grid-template-columns: 1fr; }
+  .poema-painel { min-height: 360px; }
+  .poema-vertical { font-size: 1.05rem; gap: .5rem; }
+  .cal-celula { min-height: 44px; }
+  .cal-num { font-size: .95rem; }
+}
