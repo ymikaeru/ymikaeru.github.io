@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(netstat -ano)",
+      "Bash(powershell.exe -Command \"Get-Process -Id 38564 -ErrorAction SilentlyContinue | Select-Object Id, ProcessName, Path | Format-List\")",
+      "Bash(powershell.exe -Command 'Get-CimInstance Win32_Process -Filter '\\\\''ProcessId=38564'\\\\'' | Select-Object ProcessId, CommandLine, @{N='\\\\''Dir'\\\\'';E={\\(Get-Process -Id $_.ProcessId\\).Path}} | Format-List')",
+      "Bash(powershell.exe -Command \"\\(Get-Process -Id 38564\\).StartInfo.WorkingDirectory; \\(Get-CimInstance Win32_Process -Filter 'ProcessId=38564'\\).ExecutablePath; Get-Process -Id 38564 | Select-Object Name, @{N='CWD';E={\\(Get-Process -Id 38564 -FileVersionInfo -ErrorAction SilentlyContinue\\)}}\")",
+      "Bash(powershell.exe -Command '$h = \\(Get-Process -Id 38564\\).Handle; Add-Type -MemberDefinition '\\\\''[DllImport\\(\"kernel32.dll\"\\)] public static extern uint QueryFullProcessImageName\\(IntPtr p, uint f, System.Text.StringBuilder s, ref uint l\\);'\\\\'' -Name Win32 -Namespace API; $lsof = \\(cmd /c \"handle64.exe -p 38564 2>nul\" 2>&1\\); $lsof')",
+      "Bash(curl -s -I http://localhost:8001/css/landing.css)",
+      "Bash(curl -s http://localhost:8001/css/landing.css)"
+    ]
+  }
+}

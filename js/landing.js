@@ -225,10 +225,6 @@
       const registros = data || [];
       if (!registros.length) return;
 
-      const sede     = registros.filter(r => r.category === 'sede');
-      const difusoes = registros.filter(r => r.category === 'difusao');
-      const johrei   = registros.filter(r => r.category === 'johrei');
-
       function cardHTML(r) {
         const tel = r.telefone ? r.telefone.replace(/\D/g, '') : null;
         return `
@@ -257,23 +253,35 @@
           </div>`;
       }
 
-      function secaoHTML(titulo, itens) {
-        if (!itens.length) return '';
-        return `
-          <div class="acesso-secao">
-            <div class="acesso-categoria-titulo">${titulo}</div>
-            <div class="acesso-cards">${itens.map(cardHTML).join('')}</div>
-          </div>`;
-      }
+      const grupos = {};
+      registros.forEach(r => {
+        const cat = r.category || 'Outros';
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(r);
+      });
+
+      const isSede = cat => /sede/i.test(cat);
+      const sedeCards = Object.entries(grupos)
+        .filter(([c]) => isSede(c))
+        .flatMap(([, rs]) => rs)
+        .map(cardHTML).join('');
+      const outrosCards = Object.entries(grupos)
+        .filter(([c]) => !isSede(c))
+        .flatMap(([, rs]) => rs)
+        .map(cardHTML).join('');
+      const outrosGrupos = outrosCards ? `
+          <div class="acesso-grupo">
+            <div class="acesso-grupo-titulo">Difusões e Núcleos de Johrei</div>
+            <div class="acesso-grupo-cards">${outrosCards}</div>
+          </div>` : '';
 
       const html = `
         <div class="acesso-header">
           <span class="acesso-kigo">Acesso</span>
         </div>
-        <div class="acesso-secoes">
-          ${secaoHTML('Sede Central', sede)}
-          ${secaoHTML('Difusões', difusoes)}
-          ${secaoHTML('Casa de Johrei', johrei)}
+        <div class="acesso-layout">
+          ${sedeCards ? `<div class="acesso-sede">${sedeCards}</div>` : ''}
+          ${outrosGrupos ? `<div class="acesso-outros">${outrosGrupos}</div>` : ''}
         </div>`;
 
       painel.hidden = false;
