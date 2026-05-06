@@ -555,31 +555,24 @@ main.landing {
 }
 
 .acesso-layout {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem 1rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .acesso-sede {
-  grid-column: 1 / 3;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
-.acesso-outros {
-  grid-column: 3 / 4;
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
-}
+.acesso-outros { display: flex; flex-direction: column; gap: .75rem; }
 
 .acesso-grupo { display: flex; flex-direction: column; gap: .75rem; }
 
 .acesso-grupo-cards {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
