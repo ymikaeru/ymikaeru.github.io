@@ -414,7 +414,7 @@ main.landing {
   font-weight: 400;
   letter-spacing: -.01em;
   line-height: 1.25;
-  color: var(--text);
+  color: var(--accent);
   margin-bottom: .8rem;
 }
 
