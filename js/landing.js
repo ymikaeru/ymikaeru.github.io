@@ -316,16 +316,10 @@
       painel.hidden = false;
       painel.style.display = '';
       painel.innerHTML = `
-        <div class="comunicados-header">
-          <span class="comunicados-kigo">Comunicados</span>
-        </div>
         <div class="comunicados-lista">
           ${ativos.map(c => `
             <article class="comunicado-item">
-              <header class="comunicado-item-header">
-                <h3 class="comunicado-titulo">${escapar(c.title)}</h3>
-                <time class="comunicado-data">${formatarData(c.published_at)}</time>
-              </header>
+              <h3 class="comunicado-titulo">${escapar(c.title)}</h3>
               <div class="comunicado-body">${formatarBody(c.body)}</div>
             </article>
           `).join('')}
@@ -335,12 +329,6 @@
       console.warn('[landing] falha ao carregar comunicados:', e);
       ocultarComunicados(painel);
     }
-  }
-
-  function formatarData(iso) {
-    try {
-      return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-    } catch { return iso; }
   }
 
   function formatarBody(texto) {
