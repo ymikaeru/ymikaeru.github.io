@@ -332,11 +332,19 @@
   }
 
   function formatarBody(texto) {
-    // Transforma quebras de linha em parágrafos, escapando HTML.
+    // Escapa HTML, separa parágrafos por linha em branco e converte
+    // **trecho** em negrito.
     return escapar(texto || '')
       .split(/\n{2,}/)
-      .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+      .map(p => `<p>${aplicarNegrito(p.replace(/\n/g, '<br>'))}</p>`)
       .join('');
+  }
+
+  // **trecho** -> <strong>trecho</strong>. Aplicado SOMENTE depois de escapar(),
+  // então todo HTML do texto já virou entidade; o único elemento gerado é
+  // <strong> (sem atributos), mantendo a renderização segura contra injeção.
+  function aplicarNegrito(s) {
+    return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   }
 
   function escapar(s) {
