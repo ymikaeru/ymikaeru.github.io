@@ -333,18 +333,20 @@
 
   function formatarBody(texto) {
     // Escapa HTML, separa parágrafos por linha em branco e converte
-    // **trecho** em negrito.
+    // **trecho** em negrito e *trecho* em itálico.
     return escapar(texto || '')
       .split(/\n{2,}/)
-      .map(p => `<p>${aplicarNegrito(p.replace(/\n/g, '<br>'))}</p>`)
+      .map(p => `<p>${aplicarFormatacao(p.replace(/\n/g, '<br>'))}</p>`)
       .join('');
   }
 
-  // **trecho** -> <strong>trecho</strong>. Aplicado SOMENTE depois de escapar(),
-  // então todo HTML do texto já virou entidade; o único elemento gerado é
-  // <strong> (sem atributos), mantendo a renderização segura contra injeção.
-  function aplicarNegrito(s) {
-    return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // **trecho** -> <strong>trecho</strong>, *trecho* -> <em>trecho</em>
+  // Aplicado SOMENTE depois de escapar(), então todo HTML do texto
+  // já virou entidade; garantindo renderização segura.
+  function aplicarFormatacao(s) {
+    return s
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
   }
 
   function escapar(s) {
