@@ -313,13 +313,16 @@
       if (error) throw error;
       const ativos = (data || []).filter(c => (c.title && c.title.trim()) || (c.body && c.body.trim()));
       if (!ativos.length) return;
+      const skin = await carregarSkinComunicados();
       painel.hidden = false;
       painel.style.display = '';
+      // Skin global no painel — vale pra todos os comunicados (escolhido no admin).
+      painel.className = `comunicados-painel comunicados--${skin}`;
       painel.innerHTML = `
+        <h2 class="comunicados-titulo">Comunicados</h2>
         <div class="comunicados-lista">
           ${ativos.map(c => `
             <article class="comunicado-item">
-              <div class="comunicado-kicker">Comunicado</div>
               <h3 class="comunicado-titulo">${escapar(c.title)}</h3>
               <div class="comunicado-body">${formatarBody(c.body)}</div>
             </article>
@@ -329,6 +332,23 @@
     } catch (e) {
       console.warn('[landing] falha ao carregar comunicados:', e);
       ocultarComunicados(painel);
+    }
+  }
+
+  // Skin global dos comunicados (a/b/c), de public.landing_config (id=1).
+  // Resiliente: se a tabela/linha ainda não existe ou der erro, cai no 'c'.
+  async function carregarSkinComunicados() {
+    try {
+      const { data, error } = await window.supabase
+        .from('landing_config')
+        .select('comunicados_skin')
+        .eq('id', 1)
+        .maybeSingle();
+      if (error) return 'c';
+      const s = data && data.comunicados_skin;
+      return ['a', 'b', 'c'].includes(s) ? s : 'c';
+    } catch (e) {
+      return 'c';
     }
   }
 

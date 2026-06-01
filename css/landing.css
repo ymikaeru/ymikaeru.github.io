@@ -402,37 +402,39 @@ main.landing {
   flex-direction: column;
 }
 
-/* Item: filete dourado vertical à esquerda (estilo editorial/citação) */
-.comunicado-item {
-  border-left: 3px solid var(--accent);
-  padding-left: 1.8rem;
-}
-.comunicado-item + .comunicado-item {
-  margin-top: 2.25rem;
-}
-
-/* Eyebrow "Comunicado" — pequeno, caixa-alta, espaçado, dourado. O dourado
-   fica reservado a este rótulo + ao filete; o título usa a cor de tinta. */
-.comunicado-kicker {
+/* ── Cabeçalho da seção (único, no topo do painel) ──────────────────── */
+.comunicados-titulo {
   font-family: 'Outfit', sans-serif;
-  font-size: .72rem;
+  font-size: .74rem;
   font-weight: 600;
   letter-spacing: .26em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: .7rem;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin: 0 0 1.5rem;
+}
+.comunicados-titulo::before {
+  content: '';
+  width: 28px;
+  height: 1.5px;
+  background: var(--accent);
+  flex: none;
+}
+
+/* ── Item (título + corpo; sem rótulo repetido) ─────────────────────── */
+.comunicado-item + .comunicado-item {
+  margin-top: 1.9rem;
 }
 
 .comunicado-titulo {
   font-family: 'Crimson Pro', serif;
-  font-size: 1.9rem;
+  font-size: 1.55rem;
   font-weight: 500;
   letter-spacing: -.015em;
-  line-height: 1.12;
-  color: var(--text);
-  padding-bottom: 1.1rem;
-  margin: 0 0 1.1rem;
-  border-bottom: 1px solid var(--border);
+  line-height: 1.15;
+  margin: 0 0 .65rem;
 }
 
 .comunicado-body p {
@@ -442,17 +444,33 @@ main.landing {
   margin-bottom: .7rem;
 }
 .comunicado-body p:last-child { margin-bottom: 0; }
-
 .comunicado-body strong { font-weight: 600; }
 
-/* Itálico em verdadeiro serifado (Outfit não tem eixo itálico — sem isto o
-   navegador sintetiza uma inclinação "falsa"). Crimson Pro tem itálico real,
-   dando um ar de nota/aparte refinada ao texto enfatizado. */
+/* Itálico em serifado real (Crimson Pro) — Outfit não tem eixo itálico. */
 .comunicado-body em {
   font-family: 'Crimson Pro', serif;
   font-size: 1.06em;
   line-height: 1.4;
 }
+
+/* ── Skins globais (escolhido no admin, vale pra todos os comunicados) ─ */
+/* A — títulos em tinta, itens separados por hairline */
+.comunicados--a .comunicado-titulo { color: var(--text); }
+.comunicados--a .comunicado-item + .comunicado-item {
+  padding-top: 1.9rem;
+  border-top: 1px solid var(--border);
+}
+
+/* B — títulos dourados, itens separados por hairline */
+.comunicados--b .comunicado-titulo { color: var(--accent); }
+.comunicados--b .comunicado-item + .comunicado-item {
+  padding-top: 1.9rem;
+  border-top: 1px solid var(--border);
+}
+
+/* C — filete dourado vertical em cada item, títulos em tinta */
+.comunicados--c .comunicado-item { border-left: 3px solid var(--accent); padding-left: 1.5rem; }
+.comunicados--c .comunicado-titulo { color: var(--text); }
 
 /* =====================================================
    Animações de entrada — hero
@@ -651,9 +669,11 @@ a.acesso-detalhe-valor:hover { text-decoration: underline; }
     padding: 1.5rem 1.25rem;
   }
 
-  .comunicado-item { padding-left: 1.1rem; }
-  .comunicado-titulo { font-size: 1.5rem; }
-  .comunicado-item + .comunicado-item { margin-top: 1.75rem; }
+  .comunicados--c .comunicado-item { padding-left: 1.1rem; }
+  .comunicado-titulo { font-size: 1.35rem; }
+  .comunicado-item + .comunicado-item { margin-top: 1.5rem; }
+  .comunicados--a .comunicado-item + .comunicado-item,
+  .comunicados--b .comunicado-item + .comunicado-item { padding-top: 1.5rem; }
 
   .acesso-layout {
     grid-template-columns: 1fr;
