@@ -319,6 +319,7 @@
         <div class="comunicados-lista">
           ${ativos.map(c => `
             <article class="comunicado-item">
+              <div class="comunicado-kicker">Comunicado</div>
               <h3 class="comunicado-titulo">${escapar(c.title)}</h3>
               <div class="comunicado-body">${formatarBody(c.body)}</div>
             </article>

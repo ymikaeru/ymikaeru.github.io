@@ -402,56 +402,48 @@ main.landing {
   flex-direction: column;
 }
 
+/* Item: filete dourado vertical à esquerda (estilo editorial/citação) */
+.comunicado-item {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.8rem;
+}
 .comunicado-item + .comunicado-item {
   margin-top: 2.25rem;
-  padding-top: 2.25rem;
-  border-top: 1px solid var(--border);
+}
+
+/* Eyebrow "Comunicado" — pequeno, caixa-alta, espaçado, dourado. O dourado
+   fica reservado a este rótulo + ao filete; o título usa a cor de tinta. */
+.comunicado-kicker {
+  font-family: 'Outfit', sans-serif;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .7rem;
 }
 
 .comunicado-titulo {
   font-family: 'Crimson Pro', serif;
-  font-size: 1.6rem;
-  font-weight: 400;
-  letter-spacing: -.01em;
-  line-height: 1.2;
-  color: var(--accent);
-  padding-bottom: .9rem;
-  margin-bottom: 1rem;
+  font-size: 1.9rem;
+  font-weight: 500;
+  letter-spacing: -.015em;
+  line-height: 1.12;
+  color: var(--text);
+  padding-bottom: 1.1rem;
+  margin: 0 0 1.1rem;
   border-bottom: 1px solid var(--border);
-}
-
-/* Marcador: um único ponto dourado antes do título, pulsando suavemente */
-.comunicado-titulo::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin-right: .65rem;
-  vertical-align: middle;
-  transform: translateY(-.12em);
-  animation: comunicadoPulse 2.6s ease-in-out infinite;
-}
-
-/* O translateY precisa ser mantido em todos os keyframes — transform é
-   uma propriedade única e a animação substituiria o alinhamento vertical. */
-@keyframes comunicadoPulse {
-  0%, 100% { transform: translateY(-.12em) scale(1);  opacity: 1; }
-  50%      { transform: translateY(-.12em) scale(.8); opacity: .5; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .comunicado-titulo::before { animation: none; }
 }
 
 .comunicado-body p {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--text);
-  margin-bottom: .65rem;
+  margin-bottom: .7rem;
 }
 .comunicado-body p:last-child { margin-bottom: 0; }
+
+.comunicado-body strong { font-weight: 600; }
 
 /* Itálico em verdadeiro serifado (Outfit não tem eixo itálico — sem isto o
    navegador sintetiza uma inclinação "falsa"). Crimson Pro tem itálico real,
@@ -659,11 +651,9 @@ a.acesso-detalhe-valor:hover { text-decoration: underline; }
     padding: 1.5rem 1.25rem;
   }
 
-  .comunicado-titulo { font-size: 1.35rem; }
-  .comunicado-item + .comunicado-item {
-    margin-top: 1.75rem;
-    padding-top: 1.75rem;
-  }
+  .comunicado-item { padding-left: 1.1rem; }
+  .comunicado-titulo { font-size: 1.5rem; }
+  .comunicado-item + .comunicado-item { margin-top: 1.75rem; }
 
   .acesso-layout {
     grid-template-columns: 1fr;
