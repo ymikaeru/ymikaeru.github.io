@@ -390,7 +390,7 @@ main.landing {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 2.25rem 2.5rem;
+  padding: 1.75rem 2rem;
   display: flex;
   flex-direction: column;
 }
@@ -410,12 +410,12 @@ main.landing {
 
 .comunicado-titulo {
   font-family: 'Crimson Pro', serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 400;
   letter-spacing: -.01em;
-  line-height: 1.25;
+  line-height: 1.2;
   color: var(--accent);
-  margin-bottom: .8rem;
+  margin-bottom: .6rem;
 }
 
 /* Marcador: um único ponto dourado antes do título, pulsando suavemente */
@@ -444,12 +444,21 @@ main.landing {
 }
 
 .comunicado-body p {
-  font-size: .95rem;
-  line-height: 1.75;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--text);
   margin-bottom: .65rem;
 }
 .comunicado-body p:last-child { margin-bottom: 0; }
+
+/* Itálico em verdadeiro serifado (Outfit não tem eixo itálico — sem isto o
+   navegador sintetiza uma inclinação "falsa"). Crimson Pro tem itálico real,
+   dando um ar de nota/aparte refinada ao texto enfatizado. */
+.comunicado-body em {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.06em;
+  line-height: 1.4;
+}
 
 /* =====================================================
    Animações de entrada — hero
