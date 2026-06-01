@@ -423,6 +423,18 @@ main.landing {
   flex: none;
 }
 
+/* Eyebrow "Comunicado" no próprio item — usado quando há SÓ 1 comunicado
+   (aí não há cabeçalho de seção; o rótulo fica no item, como no card único). */
+.comunicado-kicker {
+  font-family: 'Outfit', sans-serif;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 .7rem;
+}
+
 /* ── Item (título + corpo; sem rótulo repetido) ─────────────────────── */
 .comunicado-item + .comunicado-item {
   margin-top: 1.9rem;
@@ -471,6 +483,14 @@ main.landing {
 /* C — filete dourado vertical em cada item, títulos em tinta */
 .comunicados--c .comunicado-item { border-left: 3px solid var(--accent); padding-left: 1.5rem; }
 .comunicados--c .comunicado-titulo { color: var(--text); }
+
+/* ── 1 comunicado só (.comunicados--solo) ───────────────────────────── */
+/* Sem cabeçalho de seção; o item ganha o eyebrow + hairline sob o título. */
+.comunicados--solo .comunicado-titulo {
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
 
 /* =====================================================
    Animações de entrada — hero

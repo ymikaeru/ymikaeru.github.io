@@ -314,15 +314,20 @@
       const ativos = (data || []).filter(c => (c.title && c.title.trim()) || (c.body && c.body.trim()));
       if (!ativos.length) return;
       const skin = await carregarSkinComunicados();
+      const solo = ativos.length === 1;
       painel.hidden = false;
       painel.style.display = '';
-      // Skin global no painel — vale pra todos os comunicados (escolhido no admin).
-      painel.className = `comunicados-painel comunicados--${skin}`;
+      // Skin global no painel (escolhido no admin). Com SÓ 1 comunicado, entra o
+      // modo "solo": sem cabeçalho de seção — o item leva o eyebrow "Comunicado"
+      // + hairline sob o título. Com vários, um cabeçalho "Comunicados" no topo
+      // e os itens sem repetir o rótulo.
+      painel.className = `comunicados-painel comunicados--${skin}${solo ? ' comunicados--solo' : ''}`;
       painel.innerHTML = `
-        <h2 class="comunicados-titulo">Comunicados</h2>
+        ${solo ? '' : '<h2 class="comunicados-titulo">Comunicados</h2>'}
         <div class="comunicados-lista">
           ${ativos.map(c => `
             <article class="comunicado-item">
+              ${solo ? '<div class="comunicado-kicker">Comunicado</div>' : ''}
               <h3 class="comunicado-titulo">${escapar(c.title)}</h3>
               <div class="comunicado-body">${formatarBody(c.body)}</div>
             </article>
