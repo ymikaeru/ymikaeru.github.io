@@ -415,7 +415,9 @@ main.landing {
   letter-spacing: -.01em;
   line-height: 1.2;
   color: var(--accent);
-  margin-bottom: .6rem;
+  padding-bottom: .9rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
 }
 
 /* Marcador: um único ponto dourado antes do título, pulsando suavemente */
