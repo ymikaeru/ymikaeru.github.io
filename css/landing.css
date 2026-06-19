@@ -318,7 +318,7 @@ main.landing {
   padding: 1.5rem 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: .6rem;
+  gap: 1.25rem;
   position: relative;
   overflow: hidden;
 }
@@ -346,34 +346,71 @@ main.landing {
   line-height: 1.2;
 }
 
-.poema-vertical {
+.poema-corpo {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.poema-jp {
   display: flex;
   flex-direction: column;
-  gap: .25rem;
-  font-family: 'Noto Serif JP', serif;
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: var(--text);
-  text-align: center;
+  gap: .9rem;
 }
-.poema-linha { letter-spacing: .1em; }
+
+.poema-vertical {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.9;
+  letter-spacing: .06em;
+  color: var(--text);
+  text-align: left;
+}
 
 .poema-traducao {
   font-family: 'Crimson Pro', serif;
   font-style: italic;
-  font-size: 1.15rem;
-  line-height: 1.7;
-  color: var(--muted);
-  text-align: center;
-  padding: 0 .75rem;
+  font-size: 1.35rem;
+  line-height: 1.65;
+  color: var(--text);
+  text-align: left;
+  border-left: 2px solid rgba(184, 134, 11, .4);
+  padding-left: 18px;
 }
 
 .poema-romaji {
-  font-size: .76rem;
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: .82rem;
   color: var(--muted);
-  text-align: center;
-  line-height: 1.65;
+  text-align: left;
+  line-height: 1.6;
   letter-spacing: .02em;
+}
+
+.poema-kicker {
+  font-family: 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  font-size: .66rem;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.poema-titulo--eyebrow {
+  font-size: .92rem;
+  font-style: normal;
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+
+.poema-titulo-kanji {
+  font-family: 'Noto Serif JP', serif;
+  font-style: normal;
+  font-size: .82em;
+  opacity: .72;
 }
 
 .poema-vazio {
@@ -660,7 +697,8 @@ a.acesso-detalhe-valor:hover { text-decoration: underline; }
 @media (max-width: 760px) {
   body { padding: 2rem .75rem 5rem; }
   .poema-painel { min-height: 320px; }
-  .poema-vertical { font-size: 1rem; gap: .4rem; }
+  .poema-corpo { grid-template-columns: 1fr; gap: 1.5rem; }
+  .poema-vertical { font-size: 1rem; word-break: keep-all; }
   .cal-num { font-size: .95rem; }
 
   .calendario { padding: 1.25rem 1rem; }

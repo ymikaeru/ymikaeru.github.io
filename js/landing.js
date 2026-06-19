@@ -22,14 +22,28 @@
     return candidatos[seed % candidatos.length];
   }
 
-  function dividirPoemaEm2(texto) {
-    if (!texto) return ['', ''];
-    const partes = texto.replace(/　/g, ' ').split(' ').filter(p => p.trim());
-    const metade = Math.ceil(partes.length / 2);
-    return [
-      partes.slice(0, metade).join(''),
-      partes.slice(metade).join('')
-    ];
+  // Poema fixo escolhido no admin (public.landing_config id=1). Quando ativo e
+  // com algum texto, substitui a rotação automática por mês. Resiliente: se as
+  // colunas ainda não existirem ou der erro, retorna null e a landing volta à
+  // rotação normal. Mesmo padrão de carregarSkinComunicados().
+  async function carregarPoemaManual() {
+    try {
+      const { data, error } = await window.supabase
+        .from('landing_config')
+        .select('poema_ativo, poema_titulo, poema_original, poema_romaji, poema_translation, poema_autor')
+        .eq('id', 1)
+        .maybeSingle();
+      if (error || !data || !data.poema_ativo) return null;
+      const titulo      = (data.poema_titulo || '').trim();
+      const original    = (data.poema_original || '').trim();
+      const romaji       = (data.poema_romaji || '').trim();
+      const translation = (data.poema_translation || '').trim();
+      const autor       = (data.poema_autor || '').trim();
+      if (!original && !romaji && !translation) return null;
+      return { titulo, original, romaji, translation, autor };
+    } catch (e) {
+      return null;
+    }
   }
 
   // ------------------------------------------------------------
@@ -84,6 +98,30 @@
     }));
   }
 
+  // Cabeçalho do poema. Com "autor" (linha de cima, vinda do admin) usa o layout
+  // em destaque: kicker dourado + título serifado da coleção. Sem autor, cai no
+  // eyebrow discreto — igual ao "Yama to Mizu" da rotação por mês. A parte entre
+  // parênteses (kanji) fica sempre mais leve, em Noto Serif JP.
+  function cabecalhoPoemaHTML(poema) {
+    const titulo = (poema.titulo && poema.titulo.trim()) || 'Poemas "Yama to Mizu" (山と水)';
+    const autor = poema.autor && poema.autor.trim();
+    const m = titulo.match(/^(.*?)\s*(\([^)]*\))\s*$/);
+    const tituloHTML = m
+      ? `${escapar(m[1])} <span class="poema-titulo-kanji">${escapar(m[2])}</span>`
+      : escapar(titulo);
+    if (autor) {
+      return `<div class="poema-kicker">${escapar(autor)}</div>
+        <div class="poema-titulo">${tituloHTML}</div>`;
+    }
+    return `<div class="poema-titulo poema-titulo--eyebrow">${tituloHTML}</div>`;
+  }
+
+  // Romaji e tradução podem ter quebras de linha intencionais (definidas no
+  // admin): cada \n vira <br>. Escapa antes — renderização segura.
+  function multilinhaHTML(texto) {
+    return escapar(texto || '').replace(/\n+/g, '<br>');
+  }
+
   function renderPoema(poema) {
     const painel = document.querySelector('#poema-painel');
     if (!painel) return;
@@ -92,16 +130,17 @@
       return;
     }
     painel.hidden = false;
-    const linhas = dividirPoemaEm2(poema.original);
     revelarConteudo(painel, `
       <div class="poema-header">
-        <div class="poema-titulo" style="font-weight:400; font-size:.92rem; font-style:normal; letter-spacing:.04em; color:var(--muted);">Poemas "Yama to Mizu" <span style="font-family:'Noto Serif JP',serif; font-size:.85rem; opacity:.7;">(山と水)</span></div>
+        ${cabecalhoPoemaHTML(poema)}
       </div>
-      <div class="poema-vertical" aria-hidden="true">
-        ${linhas.map(l => `<div class="poema-linha">${l}</div>`).join('')}
+      <div class="poema-corpo">
+        <div class="poema-jp">
+          <div class="poema-vertical" aria-hidden="true">${escapar(poema.original || '')}</div>
+          <p class="poema-romaji"><em>${multilinhaHTML(poema.romaji)}</em></p>
+        </div>
+        <p class="poema-traducao">${multilinhaHTML(poema.translation)}</p>
       </div>
-      <p class="poema-romaji"><em>${poema.romaji || ''}</em></p>
-      <p class="poema-traducao">${poema.translation || ''}</p>
     `);
   }
 
@@ -387,7 +426,11 @@
   async function atualizar() {
     const eventos = await carregarEventosDoMes();
     renderCalendario(eventos);
-    renderPoema(poemaDoMes(estado.mes));
+    // Busca o poema fixo do admin uma vez e cacheia; nas trocas de mês reusa.
+    if (estado.poemaManual === undefined) {
+      estado.poemaManual = await carregarPoemaManual();
+    }
+    renderPoema(estado.poemaManual || poemaDoMes(estado.mes));
   }
 
   function inicializar() {
