@@ -10,16 +10,81 @@
   };
 
   // ------------------------------------------------------------
+  // Estações brasileiras — cada uma cobre 3 meses (a ordem define a posição
+  // 0/1/2 do mês dentro da estação, usada pela rotação anti-repetição).
+  // ------------------------------------------------------------
+  const ESTACOES = [
+    { key: 'verao',     kigo: 'Verão',     meses: [12, 1, 2] },
+    { key: 'outono',    kigo: 'Outono',    meses: [3, 4, 5] },
+    { key: 'inverno',   kigo: 'Inverno',   meses: [6, 7, 8] },
+    { key: 'primavera', kigo: 'Primavera', meses: [9, 10, 11] }
+  ];
+
+  function estacaoDoMes(mes1 /* 1..12 */) {
+    const est = ESTACOES.find(s => s.meses.includes(mes1)) || null;
+    const pos = est ? est.meses.indexOf(mes1) : 0;
+    return { est, pos };
+  }
+
+  // "Ano da estação": no verão, dezembro abre o ciclo que continua em jan/fev do
+  // ano seguinte. Fazendo dez usar o próprio ano e jan/fev usarem (ano-1), os
+  // três meses compartilham o mesmo k → trio consecutivo dez→jan→fev sem repetir.
+  function anoDaEstacao(est, mes1, ano) {
+    if (est && est.key === 'verao' && mes1 !== 12) return ano - 1;
+    return ano;
+  }
+
+  // Escolhe 1 poema do pool da estação garantindo 3 DISTINTOS por trimestre (um
+  // por mês, posições 0/1/2) e avançando o trio +3 a cada ano — determinístico,
+  // sem precisar guardar histórico. Requer pool com ≥3 poemas p/ nunca repetir.
+  function escolherDoPool(pool, mes1, ano) {
+    if (!Array.isArray(pool) || pool.length === 0) return null;
+    const { est, pos } = estacaoDoMes(mes1);
+    const k = anoDaEstacao(est, mes1, ano);
+    const n = pool.length;
+    const off = (((k * 3) % n) + n) % n;
+    return pool[(off + pos) % n];
+  }
+
+  // ------------------------------------------------------------
   // Poema do mês
   // ------------------------------------------------------------
   function poemaDoMes(mesIndex /* 0..11 */) {
     const mes1 = mesIndex + 1;
-    const candidatos = (window.TODAS_POESIAS || [])
+    const { est } = estacaoDoMes(mes1);
+    // 1) Pool curado no admin (public.landing_config.season_pools), se existir.
+    const pools = estado.seasonPools;
+    if (pools && est && Array.isArray(pools[est.key]) && pools[est.key].length) {
+      const p = escolherDoPool(pools[est.key], mes1, estado.ano);
+      if (p) return p;
+    }
+    // 2) Fallback: TODAS_POESIAS agrupado por estação (mesma regra anti-repetição).
+    if (est) {
+      const fb = (window.TODAS_POESIAS || []).filter(p => p.kigo === est.kigo);
+      if (fb.length) return escolherDoPool(fb, mes1, estado.ano);
+    }
+    // 3) Último recurso: filtro antigo por meses.
+    const cand = (window.TODAS_POESIAS || [])
       .filter(p => Array.isArray(p.meses) && p.meses.includes(mes1));
-    if (!candidatos.length) return null;
-    // Rotaciona por ano para não mostrar sempre o mesmo poema no mesmo mês
-    const seed = estado.ano * 13 + mes1;
-    return candidatos[seed % candidatos.length];
+    if (!cand.length) return null;
+    return cand[(estado.ano * 13 + mes1) % cand.length];
+  }
+
+  // Pools sazonais curados no admin. Query própria (separada do poema fixo) para
+  // ser resiliente: se a coluna season_pools ainda não existir, só desativa os
+  // pools — o poema fixo e a rotação de fallback seguem funcionando.
+  async function carregarSeasonPools() {
+    try {
+      const { data, error } = await window.supabase
+        .from('landing_config')
+        .select('season_pools')
+        .eq('id', 1)
+        .maybeSingle();
+      if (error || !data || !data.season_pools) return null;
+      return data.season_pools; // jsonb já chega como objeto
+    } catch (e) {
+      return null;
+    }
   }
 
   // Poema fixo escolhido no admin (public.landing_config id=1). Quando ativo e
@@ -426,9 +491,13 @@
   async function atualizar() {
     const eventos = await carregarEventosDoMes();
     renderCalendario(eventos);
-    // Busca o poema fixo do admin uma vez e cacheia; nas trocas de mês reusa.
+    // Busca o poema fixo e os pools sazonais do admin uma vez e cacheia; nas
+    // trocas de mês reusa.
     if (estado.poemaManual === undefined) {
       estado.poemaManual = await carregarPoemaManual();
+    }
+    if (estado.seasonPools === undefined) {
+      estado.seasonPools = await carregarSeasonPools();
     }
     renderPoema(estado.poemaManual || poemaDoMes(estado.mes));
   }
