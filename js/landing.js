@@ -70,21 +70,28 @@
     return cand[(estado.ano * 13 + mes1) % cand.length];
   }
 
-  // Pools sazonais curados no admin. Query própria (separada do poema fixo) para
-  // ser resiliente: se a coluna season_pools ainda não existir, só desativa os
-  // pools — o poema fixo e a rotação de fallback seguem funcionando.
-  async function carregarSeasonPools() {
+  // Pools sazonais + poema fixado por mês, curados no admin. Query própria
+  // (separada do poema fixo global) para ser resiliente: se as colunas ainda não
+  // existirem, só desativa esses recursos — o poema fixo global e a rotação de
+  // fallback seguem funcionando. Grava direto em estado.
+  async function carregarPoolsEOverrides() {
+    // Selects separados: se a coluna month_overrides ainda não existir (migração
+    // não rodada), o erro NÃO derruba o season_pools — cada recurso é resiliente.
     try {
       const { data, error } = await window.supabase
-        .from('landing_config')
-        .select('season_pools')
-        .eq('id', 1)
-        .maybeSingle();
-      if (error || !data || !data.season_pools) return null;
-      return data.season_pools; // jsonb já chega como objeto
-    } catch (e) {
-      return null;
-    }
+        .from('landing_config').select('season_pools').eq('id', 1).maybeSingle();
+      if (!error && data) estado.seasonPools = data.season_pools || null;
+    } catch (e) { /* fallback de rotação */ }
+    try {
+      const { data, error } = await window.supabase
+        .from('landing_config').select('month_overrides').eq('id', 1).maybeSingle();
+      if (!error && data) estado.monthOverrides = data.month_overrides || null;
+    } catch (e) { /* sem poema do mês */ }
+  }
+
+  // Chave "AAAA-MM" do mês corrente, usada no mapa month_overrides.
+  function chaveDoMes(ano, mesIndex) {
+    return `${ano}-${String(mesIndex + 1).padStart(2, '0')}`;
   }
 
   // Poema fixo escolhido no admin (public.landing_config id=1). Quando ativo e
@@ -491,15 +498,19 @@
   async function atualizar() {
     const eventos = await carregarEventosDoMes();
     renderCalendario(eventos);
-    // Busca o poema fixo e os pools sazonais do admin uma vez e cacheia; nas
-    // trocas de mês reusa.
+    // Busca o poema fixo, os pools sazonais e os overrides por mês do admin uma
+    // vez e cacheia; nas trocas de mês reusa.
     if (estado.poemaManual === undefined) {
       estado.poemaManual = await carregarPoemaManual();
     }
-    if (estado.seasonPools === undefined) {
-      estado.seasonPools = await carregarSeasonPools();
+    if (estado.configLoaded === undefined) {
+      estado.configLoaded = true;
+      await carregarPoolsEOverrides();
     }
-    renderPoema(estado.poemaManual || poemaDoMes(estado.mes));
+    // Prioridade: poema fixo global → poema fixado neste mês → rotação por estação.
+    const mesKey = chaveDoMes(estado.ano, estado.mes);
+    const pinDoMes = estado.monthOverrides && estado.monthOverrides[mesKey];
+    renderPoema(estado.poemaManual || pinDoMes || poemaDoMes(estado.mes));
   }
 
   function inicializar() {
