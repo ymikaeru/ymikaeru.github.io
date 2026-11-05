@@ -143,7 +143,7 @@ const TODAS_POESIAS = [
         title: "O Verde que Arde",
         original: "うららけき　日條に雨後の草の原　緑さやかに萌えたぎろえる",
         romaji: "Urarakeki / hisuji ni ugo no kusanohara / midori sayaka ni moetagiroeru",
-        translation: "Aos serenos raios de sol,\no campo de relva, depois da chuva,\nem límpido verde,\nbrota e ferve.",
+        translation: "Aos serenos raios de sol,\no campo de relva, depois da chuva,\nem límpido verde,\nbrota e fervilha.",
         kigo: "Primavera",
         meses: [11],
         yama_number: 1189
