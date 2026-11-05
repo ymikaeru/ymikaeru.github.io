@@ -194,6 +194,12 @@
     return escapar(texto || '').replace(/\n+/g, '<br>');
   }
 
+  // O waka separa as frases com espaço: cada uma vira uma linha, para acompanhar
+  // as linhas da tradução ao lado.
+  function versosJaHTML(texto) {
+    return escapar((texto || '').trim()).split(/\s+/).join('<br>');
+  }
+
   function renderPoema(poema) {
     const painel = document.querySelector('#poema-painel');
     if (!painel) return;
@@ -208,7 +214,7 @@
       </div>
       <div class="poema-corpo">
         <div class="poema-jp">
-          <div class="poema-vertical" aria-hidden="true">${escapar(poema.original || '')}</div>
+          <div class="poema-vertical" aria-hidden="true">${versosJaHTML(poema.original)}</div>
           <p class="poema-romaji"><em>${multilinhaHTML(poema.romaji)}</em></p>
         </div>
         <p class="poema-traducao">${multilinhaHTML(poema.translation)}</p>
