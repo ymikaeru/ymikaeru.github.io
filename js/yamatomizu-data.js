@@ -114,7 +114,7 @@ const TODAS_POESIAS = [
     },
     {
         title: "A Flor Secreta da Nespereira",
-        original: "夕まけて　冬陽のとどく庭隅に　いとひそけくもびわの花咲く",
+        original: "夕まけて　冬陽のとどく庭隅に　いとひそけくも枇杷の花咲く",
         romaji: "Yūmakete / fuyubi no todoku niwasumi ni / ito hisokeku mo biwa no hana saku",
         translation: "Ao declinar da tarde,\nno canto do jardim que o sol de inverno alcança,\ntão silenciosa, abre-se a flor da nespereira.",
         kigo: "Inverno",
@@ -141,7 +141,7 @@ const TODAS_POESIAS = [
     },
     {
         title: "O Verde que Arde",
-        original: "うららけき　日條に雨後の草の原　緑さやかに萌えたぎろえる",
+        original: "うららけき　日條に雨後の草野原　緑さやかに萌えたぎろえる",
         romaji: "Urarakeki / hisuji ni ugo no kusanohara / midori sayaka ni moetagiroeru",
         translation: "Serena luz:\nem seus raios, após a chuva, o campo de relva,\nem límpido verde, brota e fervilha.",
         kigo: "Primavera",
